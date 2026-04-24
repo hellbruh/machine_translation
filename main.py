@@ -256,14 +256,13 @@ def train_model(output_dir: Path, train_dataset: Dataset, eval_dataset: Dataset)
 
     training_args = Seq2SeqTrainingArguments(
         output_dir=str(output_dir),
-        overwrite_output_dir=True,
         num_train_epochs=1,
         per_device_train_batch_size=8,
         per_device_eval_batch_size=8,
         learning_rate=5e-5,
         weight_decay=0.01,
         logging_steps=50,
-        evaluation_strategy="epoch",
+        eval_strategy="epoch",
         save_strategy="epoch",
         predict_with_generate=True,
         fp16=torch.cuda.is_available(),
@@ -276,7 +275,7 @@ def train_model(output_dir: Path, train_dataset: Dataset, eval_dataset: Dataset)
         args=training_args,
         train_dataset=tokenized_train,
         eval_dataset=tokenized_eval,
-        tokenizer=tokenizer,
+        processing_class=tokenizer,
         data_collator=data_collator,
     )
     trainer.train()
